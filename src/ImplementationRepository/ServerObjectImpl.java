@@ -28,7 +28,7 @@ import org.omg.CORBA.*;
  *
  * @author Quynh Nguyen
  * @version $Id$
- * 
+ *
  * This is the implementation of the ServerObject interface, which serves as a callback
  * when the JacORB is registered with a TAO ImR.  It allows the TAO ImR to ping
  * a JacORB server and shutdown the server when needed.
@@ -38,12 +38,15 @@ public class ServerObjectImpl
 {
     private org.omg.CORBA.ORB orb_ = null;
     org.omg.PortableServer.POA poa_ = null;
+    org.omg.PortableServer.POA root_poa_ = null;
 
     public ServerObjectImpl (org.omg.CORBA.ORB orb,
-                      org.omg.PortableServer.POA poa)
+                      org.omg.PortableServer.POA poa,
+                      org.omg.PortableServer.POA root_poa)
     {
         this.orb_ = orb;
         this.poa_ = poa;
+        this.root_poa_ = root_poa; // This is rootPOA
     }
 
     /**
@@ -66,25 +69,21 @@ public class ServerObjectImpl
             // the ImR, so we must destroy them before shutting down the orb.
             if (poa_ instanceof org.jacorb.poa.POA)
             {
-
-                ((org.jacorb.poa.POA) poa_).destroy(true, false);
+               ((org.jacorb.poa.POA) this.root_poa_).destroy(true, false);
             }
         }
-        catch (Exception e)
+        catch (Exception e1)
         {
-            // ignore for now
-
+            e1.printStackTrace();
         }
 
         try
         {
-
             orb_.shutdown (false);
         }
-        catch (Exception e)
+        catch (Exception e2)
         {
-            // ignore for now
-
+            e2.printStackTrace();
         }
 
     }
@@ -95,6 +94,6 @@ public class ServerObjectImpl
      */
     public org.omg.PortableServer.POA _default_POA()
     {
-        return (org.omg.PortableServer.POA) poa_;
+        return (org.omg.PortableServer.POA) root_poa_;
     }
 }

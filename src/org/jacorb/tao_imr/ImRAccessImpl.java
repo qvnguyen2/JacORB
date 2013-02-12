@@ -52,6 +52,8 @@ public class ImRAccessImpl
     private ImplementationRepository.Administration imrLocator = null;
     private org.jacorb.orb.ORB orb_ = null;
     private org.jacorb.poa.POA poa_ = null;
+    private org.jacorb.poa.POA root_poa_ = null;
+
     private ServerObjectImpl serverObjImpl = null;
     private ParsedIOR pior = null;
     private IIOPProfile profile = null;
@@ -86,7 +88,7 @@ public class ImRAccessImpl
         }
         catch (org.omg.CORBA.ORBPackage.InvalidName e)
         {
-            throw new INTERNAL ("unable to resolve TAO ImplRepoService: " + e.toString());
+            throw new INTERNAL ("ImRAccessImpl.connect: unable to resolve TAO ImplRepoService: " + e.toString());
         }
 
         boolean non_exist = true;
@@ -104,7 +106,7 @@ public class ImRAccessImpl
 
         if (non_exist)
         {
-            throw new INTERNAL ("Unable to resolve reference to TAO ImplRepoService");
+            throw new INTERNAL ("ImRAccessImpl.connect: Unable to resolve reference to TAO ImplRepoService");
         }
 
         result.setImRInfo();
@@ -127,7 +129,7 @@ public class ImRAccessImpl
         }
         catch (org.omg.CORBA.ORBPackage.InvalidName e)
         {
-            throw new INTERNAL ("ImRAccessImpl.getImRAddress: unable to resolve TAO ImplRepoService: " + e.toString());
+            throw new INTERNAL ("ImRAccessImpl.setImRInfo: unable to resolve TAO ImplRepoService: " + e.toString());
         }
     }
 
@@ -270,10 +272,9 @@ public class ImRAccessImpl
         try
         {
             // instantiate an instance of ServerObjectImpl.
-            org.jacorb.poa.POA root_poa = this.orb_.getRootPOA();
-
-
-            this.serverObjImpl = new ServerObjectImpl (this.orb_, root_poa);
+            // org.jacorb.poa.POA root_poa = this.orb_.getRootPOA();
+            this.root_poa_ = this.orb_.getRootPOA();
+            this.serverObjImpl = new ServerObjectImpl (this.orb_, this.poa_, this.root_poa_);
             if (this.serverObjImpl == null)
             {
                 throw new INTERNAL ("ImRAccessImpl.registerPOA_TaoImR_i: can't create an instance of ServerObjectImpl");
@@ -281,8 +282,8 @@ public class ImRAccessImpl
 
             // activate it in rootPOA
 
-            root_poa.activate_object (this.serverObjImpl);
-            org.omg.CORBA.Object objRef = root_poa.servant_to_reference (this.serverObjImpl);
+            this.root_poa_.activate_object (this.serverObjImpl);
+            org.omg.CORBA.Object objRef = this.root_poa_.servant_to_reference (this.serverObjImpl);
             String corbaLoc = CorbaLoc.generateCorbalocForMultiIIOPProfiles (this.orb_, objRef);
             int slash = corbaLoc.indexOf("/");
 
@@ -303,6 +304,7 @@ public class ImRAccessImpl
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             throw new INTERNAL (
                     "ImRAccessImpl.registerPOA_TaoImR_i: got an exception while registering "
                     + theName + " with TAO ImR, " + e.toString());
@@ -327,33 +329,41 @@ public class ImRAccessImpl
                                 String implname)
         throws INTERNAL
     {
-        try
-        {
             if (this.imrLocator != null)
             {
-                // notify ImR of being shutdown
-                this.imrLocator.server_is_shutting_down (poa._getQualifiedName());
+                try
+                {
+                    // notify ImR of being shutdown
+                    this.imrLocator.server_is_shutting_down (poa._getQualifiedName());
+                }
+                catch (Exception e1)
+                {
+                    // ignored
+                    e1.printStackTrace();
+                }
 
                 // deactivate the ServerObjectImpl
                 if (this.serverObjImpl != null)
                 {
-                    // get root_poa from the ServerObject
-                    org.omg.PortableServer.POA root_poa = this.serverObjImpl._default_POA();
-
-                    if (root_poa != null)
+                    try
                     {
-                        byte[] id =
-                            root_poa.servant_to_id (this.serverObjImpl);
-                        root_poa.deactivate_object (id);
-                        this.serverObjImpl = null;
-
+                        // get root_poa from the ServerObject
+                        org.omg.PortableServer.POA root_poa = this.serverObjImpl._default_POA();
+                        if (root_poa != null)
+                        {
+                            byte[] id =
+                                root_poa.servant_to_id (this.serverObjImpl);
+                            root_poa.deactivate_object (id);
+                            this.serverObjImpl = null;
+                        }
+                    }
+                    catch (Exception e2)
+                    {
+                        e2.printStackTrace();
+                        // force to exit
+                        System.exit(1);
                     }
                 }
             }
-        }
-        catch (Exception e)
-        {
-            // ignored
-        }
     }
 }
