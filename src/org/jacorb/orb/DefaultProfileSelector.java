@@ -154,7 +154,11 @@ public class DefaultProfileSelector implements ProfileSelector
         // entire list has been iternated.
         while (true)
         {
-            if (iterator == null || !iterator.hasNext())
+            if (iterator == null)
+            {
+                iterator = profileList.iterator();
+            }
+            else if (!iterator.hasNext())
             {
                 iterator = profileList.iterator();
             }
