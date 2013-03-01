@@ -20,6 +20,7 @@
    <target name="all" depends="init,idl">
 	<javac srcdir="${dirs.base}/test/listenendpoints/echo/generated"
                destdir="${classdir}"
+               debug="true" includeantruntime="false"
 	       includes="test/listenendpoints/echo/*.java"
 	        />
 	<javac srcdir="${dirs.base}"
