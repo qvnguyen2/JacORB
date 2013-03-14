@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
 
-]>
-
 <project name="notification-load" default="all" basedir="../../..">
 
 	<import file="../../../etc/common.xml"/>
-		
+
 	<property name="dir.base" value="${basedir}/test/load/notification" />
 	<property name="dir.work" value="${dir.base}/work" />
 	<property file="${dir.base}/build.properties" />
@@ -15,7 +13,7 @@
 		<pathelement location="${home.grinder}/lib/grinder.jar" />
 	</path>
 
-	<target name="all" description="Start Grinder Console and Agents" depends="console, supplier, consumer">
+	<target name="all" description="Start Grinder Console and Agents" depends="console, supplier, consumer"   unless="tiny-system-arch">
 	</target>
 
 	<target name="copy" depends="set-architecture">

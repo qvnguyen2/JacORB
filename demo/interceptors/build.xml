@@ -4,7 +4,7 @@
 
     <import file="../common/common-demo.xml" />
 
-    <target name="demo" depends="compile" >
+    <target name="demo" depends="compile" unless="tiny-system-arch">
 
         <mkdir dir="${tmp.dir}" />
         <tempfile property="killfile.file" destdir="${tmp.dir}" prefix="kill" />

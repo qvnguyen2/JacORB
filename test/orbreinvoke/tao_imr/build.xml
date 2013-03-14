@@ -19,10 +19,11 @@
    </target>
 
    <target name="all"
-           depends="init,compile-test-listenendpoints-echo_corbaloc,compile">
+           depends="init,compile-test-listenendpoints-echo_corbaloc,compile"
+           unless="tiny-system-arch">
    </target>
 
-   <target name="compile">
+   <target name="compile" unless="tiny-system-arch">
         <javac srcdir="${dirs.base}/test/orbreinvoke/tao_imr/generated"
                destdir="${classdir}"
             	debug="true" includeantruntime="false"
@@ -36,17 +37,18 @@
    </target>
 
    <target name="clean"
-       depends="clean-test-listenendpoints-echo_corbaloc">
+       depends="clean-test-listenendpoints-echo_corbaloc"
+       unless="tiny-system-arch" >
 	   <deltree dir="${classdir}/test/orbreinvoke/tao_imr"/>
 	   <deltree dir="${dirs.base}/test/orbreinvoke/tao_imr/generated"/>
    </target>
 
-   <target name="compile-test-listenendpoints-echo_corbaloc">
+   <target name="compile-test-listenendpoints-echo_corbaloc" unless="tiny-system-arch">
         <ant antfile="${basedir}/test/listenendpoints/echo_corbaloc/build.xml" target="idl" inheritall="false"/>
         <ant antfile="${basedir}/test/listenendpoints/echo_corbaloc/build.xml" target="all" inheritall="false"/>
     </target>
 
-    <target name="clean-test-listenendpoints-echo_corbaloc">
+    <target name="clean-test-listenendpoints-echo_corbaloc" unless="tiny-system-arch">
         <ant antfile="${basedir}/test/listenendpoints/echo_corbaloc/build.xml" target="clean" inheritall="false"/>
     </target>
 </project>

@@ -17,7 +17,7 @@
 	<property name="idlflags" value="-I${include}/omg -ir  -d ${dirs.base}/test/listenendpoints/echo/generated"/>
    </target>
 
-   <target name="all" depends="init,idl">
+   <target name="all" depends="init,idl" unless="tiny-system-arch" >
 	<javac srcdir="${dirs.base}/test/listenendpoints/echo/generated"
                destdir="${classdir}"
                debug="true" includeantruntime="false"
@@ -30,7 +30,7 @@
 	        />
    </target>
 
-   <target name="idl" depends="init">
+   <target name="idl" depends="init" unless="tiny-system-arch" >
         <java classname="org.jacorb.idl.parser"
               fork="yes"
               classpath="${lib}/idl.jar;${java.class.path}">
@@ -40,7 +40,7 @@
          </java>
    </target>
 
-   <target name="clean">
+   <target name="clean"  unless="tiny-system-arch" >
 	   <deltree dir="${classdir}/test/listenendpoints/echo"/>
 	   <deltree dir="${dirs.base}/test/listenendpoints/echo/generated"/>
    </target>

@@ -4,4 +4,6 @@
 
     <import file="../common/common-interop.xml" />
 
+    <target name="all" depends="compile"   unless="tiny-system-arch" />
+
 </project>

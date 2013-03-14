@@ -3,10 +3,10 @@
 <project name="JacORB Bank Concurrency demo" default="demo" basedir=".">
 
     <property name="jacorb.dir" value="../../.."/>
-    
+
     <import file="../../common/common-demo.xml" />
 
-    <target name="demo" depends="compile" >
+    <target name="demo" depends="compile"  unless="tiny-system-arch" >
     	<!-- This demo intended to be run manually - it requires
     	     NameServer functionality -->
     </target>

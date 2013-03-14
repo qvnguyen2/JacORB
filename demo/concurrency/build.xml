@@ -4,6 +4,6 @@
 
     <import file="../common/common-demo.xml" />
 
-    <target name="demo" depends="compile"/>
+    <target name="demo" depends="compile" unless="tiny-system-arch"/>
 
 </project>

@@ -16,9 +16,10 @@
 
    <!-- top-level target -->
    <target name="all" depends="init,src-check,version-gen,compiler,omg_idl,jacorb,libs"
-           description="Build JacORB."/>
+           description="Build JacORB."
+           unless="tiny-system-arch" />
 
-   <target name="src-check">
+   <target name="src-check" unless="tiny-system-arch" >
       <fail message="Unable to find src files. Is this a binary distribution?">
          <condition>
             <not>
@@ -28,7 +29,7 @@
       </fail>
    </target>
 
-   <target name="version-gen" >
+   <target name="version-gen" unless="tiny-system-arch" >
         <tstamp>
           <format property="TIME" pattern="k:m:s"/>
         </tstamp>
@@ -68,11 +69,11 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                   IDL compiler                       -->
    <!-- ==================================================== -->
 
-   <target name="compiler" depends="init,version-gen,idlsrc,idllib"/>
+   <target name="compiler" depends="init,version-gen,idlsrc,idllib" unless="tiny-system-arch" />
 
 
    <!-- package idl.jar -->
-   <target name="idllib" depends="idlsrc" >
+   <target name="idllib" depends="idlsrc" unless="tiny-system-arch" >
       <jar jarfile="${lib}/idl.jar"
            basedir="${classdir}"
            includes="org/jacorb/idl/**">
@@ -84,7 +85,7 @@ using BUILD_NUMBER:   ${BuildNo}
       </jar>
    </target>
 
-   <target name="idlsrc">
+   <target name="idlsrc" unless="tiny-system-arch" >
       <ant antfile="${src}/org/jacorb/idl/build.xml" dir="${basedir}" />
    </target>
 
@@ -94,7 +95,7 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                   OMG IDL files                      -->
    <!-- ==================================================== -->
 
-   <target name="omg_idl" depends="compiler">
+   <target name="omg_idl" depends="compiler" unless="tiny-system-arch" >
       <ant antfile="${basedir}/idl/build.xml" dir="${basedir}"/>
    </target>
 
@@ -103,7 +104,7 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                   JacORB implementation              -->
    <!-- ==================================================== -->
 
-   <target name="jacorb" depends="init">
+   <target name="jacorb" depends="init" unless="tiny-system-arch" >
       <ant antfile="${src}/org/jacorb/build.xml" dir="${basedir}"/>
    </target>
 
@@ -112,7 +113,7 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                  Libraries                           -->
    <!-- ==================================================== -->
 
-   <target name="libs" depends="init,jar"/>
+   <target name="libs" depends="init,jar" unless="tiny-system-arch" />
 
    <target name="jar" depends="init">
       <delete file="${lib}/jacorb.jar" failonerror="false"/>
@@ -120,7 +121,7 @@ using BUILD_NUMBER:   ${BuildNo}
       <jar jarfile="${lib}/jacorb.jar"
            index="true"
            basedir="${classdir}"
-           includes="org/jacorb/**,ImplementationRepository/**,org/omg/**"
+           includes="org/jacorb/**,org/omg/**"
            excludes="org/jacorb/idl/**,
                      org/jacorb/demo/**,
                      org/jacorb/test/**,
@@ -212,12 +213,12 @@ using BUILD_NUMBER:   ${BuildNo}
 
    <!-- This target will split the JacORB jar into jacorb.jar containing JUST the implementation -->
    <!-- code and omg.jar containing the generated stubs -->
-   <target name="jar_impl_omg" depends="init">
+   <target name="jar_impl_omg" depends="init" unless="tiny-system-arch" >
       <delete file="${lib}/jacorb.jar" failonerror="false"/>
       <delete file="${lib}/omg.jar" failonerror="false"/>
       <jar jarfile="${lib}/jacorb.jar"
            basedir="${classdir}"
-           includes="org/jacorb/**,ImplementationRepository/**"
+           includes="org/jacorb/**"
            excludes="org/jacorb/idl/**,
                      org/jacorb/demo/**,
                      org/jacorb/test/**,
@@ -271,7 +272,7 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                   clean up                           -->
    <!-- ==================================================== -->
 
-    <target name="clean" depends="init,src-check" description="Clean the checkout">
+    <target name="clean" depends="init,src-check" description="Clean the checkout" unless="tiny-system-arch" >
         <delete failonerror="false" includeemptydirs="true">
             <fileset dir="${classdir}" includes="**/*" />
         </delete>
@@ -286,7 +287,7 @@ using BUILD_NUMBER:   ${BuildNo}
         </delete>
     </target>
 
-    <target name="realclean" depends="clean" description="Clean the checkout including generated jars">
+    <target name="realclean" depends="clean" description="Clean the checkout including generated jars" unless="tiny-system-arch" >
         <delete failonerror="false" >
             <fileset dir="lib/" includes="jacorb.jar, idl.jar, jacorb-sources.jar, jacorb-services.jar"/>
         </delete >
@@ -296,8 +297,8 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                  API documentation                   -->
    <!-- ==================================================== -->
 
-   <target name="doc" depends="init" description="Create the Javadoc">
-        <property name="PKGNAMES" value="ImplementationRepository/*,org.jacorb.idl.*,org.jacorb.util.*,org.jacorb.orb.*,org.jacorb.imr.*,org.jacorb.tao_imr.*,org.jacorb.ir.*,org.jacorb.poa.*,org.jacorb.events.*,org.jacorb.naming.*,org.jacorb.security.sas.*,org.omg.*,org.jacorb.notification.*" />
+   <target name="doc" depends="init" description="Create the Javadoc" unless="tiny-system-arch" >
+        <property name="PKGNAMES" value="org.jacorb.idl.*,org.jacorb.util.*,org.jacorb.orb.*,org.jacorb.imr.*,org.jacorb.tao_imr.*,org.jacorb.ir.*,org.jacorb.poa.*,org.jacorb.events.*,org.jacorb.naming.*,org.jacorb.security.sas.*,org.omg.*,org.jacorb.notification.*" />
         <property name="PKGNAMES_EXCLUDED" value="org.jacorb.notification.filter.bsh" />
         <property name="SRCDIR2" value="" />
 
@@ -325,7 +326,7 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                  PMD                                 -->
    <!-- ==================================================== -->
 
-    <target name="pmd-locate" if="env.PMD_HOME" >
+    <target name="pmd-locate" if="env.PMD_HOME" unless="tiny-system-arch" >
         <property name="pmd.home" value="${env.PMD_HOME}" />
     </target>
 
@@ -343,7 +344,7 @@ using BUILD_NUMBER:   ${BuildNo}
         </path>
     </target>
 
-    <target name="pmd-check" depends="pmd-path2" >
+    <target name="pmd-check" depends="pmd-path2" unless="tiny-system-arch" >
         <available classname="net.sourceforge.pmd.ant.PMDTask" property="pmd.isavailable" classpathref="pmd.path"/>
 
         <fail unless="pmd.isavailable" >
@@ -358,12 +359,12 @@ using BUILD_NUMBER:   ${BuildNo}
         <echo level="verbose">pmd is using classpath: ${_pmd.cp}</echo>
     </target>
 
-    <target name="pmd-taskdef" depends="init, pmd-check">
+    <target name="pmd-taskdef" depends="init, pmd-check" unless="tiny-system-arch" >
         <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.path"/>
     </target>
 
 
-    <target name="pmd" depends="init, pmd-taskdef">
+    <target name="pmd" depends="init, pmd-taskdef" unless="tiny-system-arch" >
         <echo message="this might take some time..." />
         <pmd rulesetfiles="${basedir}/etc/pmd-ruleset.xml" shortFilenames="true">
             <formatter type="summaryhtml" toFile="pmd_report.html"/>

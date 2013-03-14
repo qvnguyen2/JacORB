@@ -14,7 +14,7 @@
 	<property name="idlflags" value="-I${include}/omg -ir  -d ${dirs.base}/test/load/imr/generated"/>
    </target>
 
-   <target name="all" depends="init,idl">
+   <target name="all" depends="init,idl"   unless="tiny-system-arch">
 	<javac srcdir="${dirs.base}/test/load/imr/generated"
                destdir="${classdir}"
 	       includes="test/load/imr/*.java"
@@ -25,9 +25,9 @@
 	        />
    </target>
 
-   <target name="idl" depends="init">
-        <java classname="org.jacorb.idl.parser" 
-              fork="yes" 
+   <target name="idl" depends="init"   unless="tiny-system-arch">
+        <java classname="org.jacorb.idl.parser"
+              fork="yes"
               classpath="${lib}/idl.jar;${java.class.path}">
 
 	      <arg line="${idlflags}
@@ -35,7 +35,7 @@
          </java>
    </target>
 
-   <target name="clean">
+   <target name="clean"   unless="tiny-system-arch">
 	   <deltree dir="${classdir}/test/load/imr"/>
 	   <deltree dir="${dirs.base}/test/load/imr/generated"/>
    </target>

@@ -18,7 +18,7 @@
 	<property name="idlflags" value="-d ${dirs.base}/test/${name}/generated"/>
    </target>
 
-   <target name="all" depends="init,idl">
+   <target name="all" depends="init,idl" unless="tiny-system-arch">
 	<javac srcdir="${dirs.base}"
                destdir="${classdir}"
 	       includes="test/${name}/generated/**/*.java,test/${name}/*.java"
@@ -27,7 +27,7 @@
 
 
 
-   <target name="idl" depends="memoryusage.init,load-taskdef">
+   <target name="idl" depends="memoryusage.init,load-taskdef"   unless="tiny-system-arch">
         <mkdir dir="${dest}" />
         <jacidl srcdir="test/${name}"
                 destdir="${dest}"
@@ -48,7 +48,7 @@
    </target>
 -->
 
-   <target name="clean" depends="init">
+   <target name="clean" depends="init"  unless="tiny-system-arch">
            <delete dir="${classdir}/test/memoryusage"/>
            <delete dir="${dirs.base}/test/memoryusage/generated"/>
    </target>

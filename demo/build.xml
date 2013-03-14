@@ -9,15 +9,15 @@
         </sequential>
     </macrodef>
 
-    <target name="compile">
+    <target name="compile" unless="tiny-system-arch" >
         <iterate target="compile"/>
     </target>
 
-    <target name="demo">
+    <target name="demo" unless="tiny-system-arch" >
         <iterate target="demo"/>
     </target>
 
-    <target name="clean">
+    <target name="clean" unless="tiny-system-arch" >
         <iterate target="clean"/>
     </target>
 

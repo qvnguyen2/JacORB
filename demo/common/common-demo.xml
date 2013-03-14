@@ -10,6 +10,37 @@
 
     <property name="tmp.dir"        value="${build.dir}/tmp" />
 
+    <!-- properties for LynxOS and PPC card -->
+    <condition property="os-name-lynx">
+		<equals arg1="${os.name}"
+			arg2="LynxOS"
+			casesensitive="false"
+			trim="true"
+		/>
+	</condition>
+	<condition property="tiny-lynx-arch">
+            <and>
+                <istrue value="${os-name-lynx}" />
+                <equals arg1="${os.arch}"
+                    arg2="ppc"
+                    casesensitive="false"
+                    trim="true"
+                />
+            </and>
+        </condition>
+
+        <!-- This property is used collectively to identify a tiny system -->
+        <!-- architectures.  It is used to minimize ant's actions so that  -->
+        <!-- tests and some demos can be executed on a tiny system with very   -->
+        <!-- little memory.  Quynh N. -->
+        <condition property="tiny-system-arch">
+            <or>
+                <istrue value="${tiny-lynx-arch}" />
+                <!-- remove entry below if another property is added -->
+                <istrue value="${tiny-lynx-arch}" />
+            </or>
+        </condition>
+
     <!-- this property can be overridden on the command line to pass in additional args  -->
     <!-- to the started java processes e.g. -Djaco.args=-Djacorb.log.default.verbosity=4 -->
     <property name="jaco.args"      value="-Dignored=value" />
@@ -39,17 +70,17 @@
         </java>
     </presetdef>
 
-    <target name="idl.taskdef">
+    <target name="idl.taskdef" unless="tiny-system-arch" >
         <taskdef name="jacidl" classname="org.jacorb.idl.JacIDL" classpathref="jacorb.classpath"/>
     </target>
 
-    <target name="idl" depends="idl.taskdef">
+    <target name="idl" depends="idl.taskdef" unless="tiny-system-arch" >
         <mkdir dir="${idl.dir}"/>
         <jacidl srcdir="${idl.dir}" destdir="${gen.dir}" includes="*.idl" helpercompat="jacorb"
     	   includepath="${jacorb.dir}/idl/omg" />
     </target>
 
-    <target name="compile" depends="idl" >
+    <target name="compile" depends="idl" unless="tiny-system-arch" >
         <mkdir dir="${classes.dir}"/>
 
         <javac destdir="${classes.dir}" debug="true" includeantruntime="false">
@@ -107,6 +138,20 @@
             </jaco>
         </sequential>
     </macrodef>
+
+    <macrodef name="run-demo-tiny" >
+		<attribute name="server" />
+		<attribute name="client" />
+		<sequential>
+			<echo message="launching demo @{server} @{client} ..." />
+
+			<exec executable="/bin/bash" newenvironment="false" dir="." failonerror="true">
+				<arg value="${jacorb.dir}/bin/launch_demo.sh" />
+				<arg value="@{server}" />
+				<arg value="@{client}" />
+			</exec>
+		</sequential>
+	</macrodef>
 
 
     <target name="clean">

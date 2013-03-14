@@ -24,7 +24,7 @@
 
     <taskdef name="jacorbidl" classname="org.jacorb.idl.JacIDL" classpathref="jacorb.classpath" />
 
-    <target name="idl">
+    <target name="idl" unless="tiny-system-arch">
         <jacorbidl srcdir="${idl.dir}"
                    destdir="${gen.dir}"
                    includes="*.idl"
@@ -32,7 +32,7 @@
                    includepath="${jacorb.dir}/idl/omg" />
     </target>
 
-    <target name="compile" depends="idl">
+    <target name="compile" depends="idl" unless="tiny-system-arch">
         <mkdir dir="${classes.dir}" />
 
         <javac destdir="${classes.dir}" debug="true" includeAntRuntime="false">
@@ -42,7 +42,7 @@
         </javac>
     </target>
 
-    <target name="clean">
+    <target name="clean"  unless="tiny-system-arch">
         <delete dir="${build.dir}" />
     </target>
 

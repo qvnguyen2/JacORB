@@ -32,6 +32,37 @@
                     trim="true"
                     />
         </condition>
+
+        <!-- properties for LynxOS and PPC card -->
+        <condition property="os-name-lynx">
+            <equals arg1="${os.name}"
+                arg2="LynxOS"
+                casesensitive="false"
+                trim="true"
+            />
+        </condition>
+        <condition property="tiny-lynx-arch">
+            <and>
+                <istrue value="${os-name-lynx}" />
+                <equals arg1="${os.arch}"
+                    arg2="ppc"
+                    casesensitive="false"
+                    trim="true"
+                />
+            </and>
+        </condition>
+
+        <!-- This property is used collectively to identify a tiny system -->
+        <!-- architectures.  It is used to minimize ant's actions so that  -->
+        <!-- tests and demos can be executed on a tiny system with very   -->
+        <!-- little memory.  Quynh N. -->
+        <condition property="tiny-system-arch">
+            <or>
+                <istrue value="${tiny-lynx-arch}" />
+                <!-- remove entry below if a new ones are added -->
+                <istrue value="${tiny-lynx-arch}" />
+            </or>
+        </condition>
    </target>
 
     <target name="init-path">

@@ -4,7 +4,9 @@
 
     <import file="../common/common-demo.xml" />
 
-    <target name="demo" depends="compile" >
+    <target name="demo" depends="demo-norm,demo-tiny" />
+
+    <target name="demo-norm" depends="compile" unless="tiny-system-arch" >
         <run-demo>
             <run-server>
                 <run-default-server classname="demo.grid.Server" />
@@ -27,6 +29,11 @@
                 <run-default-client classname="demo.grid.Client" />
             </run-client>
         </run-demo>
+    </target>
+
+    <target name="demo-tiny" if="tiny-system-arch" >
+        <run-demo-tiny server="demo.grid.Server" client="demo.grid.Client" />
+        <run-demo-tiny server="demo.grid.TieServer" client="demo.grid.Client" />
     </target>
 
 </project>
