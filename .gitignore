@@ -36,6 +36,10 @@ test/orbreinvoke/tao_imr/generated
 test/orbreinvoke/tao_imr/output
 test/orbreinvoke/tao_ns/generated
 test/orbreinvoke/tao_ns/output
+/test/load/*/generated/
+/test/load/simple/generated/
+/test/memoryusage/generated/
+/test/servantscaling/generated/
 
 .DS_Store
 _nsdb_root*
@@ -43,3 +47,4 @@ _nsdb_root*
 *.class
 *.ior
 /nbproject/private/
+/nbactions.xml
