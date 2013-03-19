@@ -13,7 +13,7 @@
 		<pathelement location="${home.grinder}/lib/grinder.jar" />
 	</path>
 
-	<target name="all" description="Start Grinder Console and Agents" depends="console, supplier, consumer"   unless="tiny-system-arch">
+	<target name="all" description="Start Grinder Console and Agents" depends="console, supplier, consumer" >
 	</target>
 
 	<target name="copy" depends="set-architecture">

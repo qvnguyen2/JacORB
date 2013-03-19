@@ -15,11 +15,10 @@
    <import file="etc/common.xml"/>
 
    <!-- top-level target -->
-   <target name="all" depends="init,src-check,version-gen,compiler,omg_idl,jacorb,libs"
-           description="Build JacORB."
-           unless="tiny-system-arch" />
+   <target name="all" depends="init,tiny-system-check,src-check,version-gen,compiler,omg_idl,jacorb,libs"
+           description="Build JacORB." />
 
-   <target name="src-check" unless="tiny-system-arch" >
+   <target name="src-check" >
       <fail message="Unable to find src files. Is this a binary distribution?">
          <condition>
             <not>
@@ -29,7 +28,7 @@
       </fail>
    </target>
 
-   <target name="version-gen" unless="tiny-system-arch" >
+   <target name="version-gen" >
         <tstamp>
           <format property="TIME" pattern="k:m:s"/>
         </tstamp>
@@ -69,11 +68,11 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                   IDL compiler                       -->
    <!-- ==================================================== -->
 
-   <target name="compiler" depends="init,version-gen,idlsrc,idllib" unless="tiny-system-arch" />
+   <target name="compiler" depends="init,version-gen,idlsrc,idllib" />
 
 
    <!-- package idl.jar -->
-   <target name="idllib" depends="idlsrc" unless="tiny-system-arch" >
+   <target name="idllib" depends="idlsrc"  >
       <jar jarfile="${lib}/idl.jar"
            basedir="${classdir}"
            includes="org/jacorb/idl/**">
@@ -85,7 +84,7 @@ using BUILD_NUMBER:   ${BuildNo}
       </jar>
    </target>
 
-   <target name="idlsrc" unless="tiny-system-arch" >
+   <target name="idlsrc" >
       <ant antfile="${src}/org/jacorb/idl/build.xml" dir="${basedir}" />
    </target>
 
@@ -95,7 +94,7 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                   OMG IDL files                      -->
    <!-- ==================================================== -->
 
-   <target name="omg_idl" depends="compiler" unless="tiny-system-arch" >
+   <target name="omg_idl" depends="compiler" >
       <ant antfile="${basedir}/idl/build.xml" dir="${basedir}"/>
    </target>
 
@@ -104,7 +103,7 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                   JacORB implementation              -->
    <!-- ==================================================== -->
 
-   <target name="jacorb" depends="init" unless="tiny-system-arch" >
+   <target name="jacorb" depends="init" >
       <ant antfile="${src}/org/jacorb/build.xml" dir="${basedir}"/>
    </target>
 
@@ -113,7 +112,7 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                  Libraries                           -->
    <!-- ==================================================== -->
 
-   <target name="libs" depends="init,jar" unless="tiny-system-arch" />
+   <target name="libs" depends="init,jar" />
 
    <target name="jar" depends="init">
       <delete file="${lib}/jacorb.jar" failonerror="false"/>
@@ -213,7 +212,7 @@ using BUILD_NUMBER:   ${BuildNo}
 
    <!-- This target will split the JacORB jar into jacorb.jar containing JUST the implementation -->
    <!-- code and omg.jar containing the generated stubs -->
-   <target name="jar_impl_omg" depends="init" unless="tiny-system-arch" >
+   <target name="jar_impl_omg" depends="init" >
       <delete file="${lib}/jacorb.jar" failonerror="false"/>
       <delete file="${lib}/omg.jar" failonerror="false"/>
       <jar jarfile="${lib}/jacorb.jar"
@@ -272,7 +271,7 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                   clean up                           -->
    <!-- ==================================================== -->
 
-    <target name="clean" depends="init,src-check" description="Clean the checkout" unless="tiny-system-arch" >
+    <target name="clean" depends="init,tiny-system-check,src-check" description="Clean the checkout">
         <delete failonerror="false" includeemptydirs="true">
             <fileset dir="${classdir}" includes="**/*" />
         </delete>
@@ -287,7 +286,7 @@ using BUILD_NUMBER:   ${BuildNo}
         </delete>
     </target>
 
-    <target name="realclean" depends="clean" description="Clean the checkout including generated jars" unless="tiny-system-arch" >
+    <target name="realclean" depends="tiny-system-check,clean" description="Clean the checkout including generated jars" >
         <delete failonerror="false" >
             <fileset dir="lib/" includes="jacorb.jar, idl.jar, jacorb-sources.jar, jacorb-services.jar"/>
         </delete >
@@ -297,7 +296,7 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                  API documentation                   -->
    <!-- ==================================================== -->
 
-   <target name="doc" depends="init" description="Create the Javadoc" unless="tiny-system-arch" >
+   <target name="doc" depends="init" description="Create the Javadoc" >
         <property name="PKGNAMES" value="org.jacorb.idl.*,org.jacorb.util.*,org.jacorb.orb.*,org.jacorb.imr.*,org.jacorb.tao_imr.*,org.jacorb.ir.*,org.jacorb.poa.*,org.jacorb.events.*,org.jacorb.naming.*,org.jacorb.security.sas.*,org.omg.*,org.jacorb.notification.*" />
         <property name="PKGNAMES_EXCLUDED" value="org.jacorb.notification.filter.bsh" />
         <property name="SRCDIR2" value="" />
@@ -326,7 +325,7 @@ using BUILD_NUMBER:   ${BuildNo}
    <!--                  PMD                                 -->
    <!-- ==================================================== -->
 
-    <target name="pmd-locate" if="env.PMD_HOME" unless="tiny-system-arch" >
+    <target name="pmd-locate" if="env.PMD_HOME" >
         <property name="pmd.home" value="${env.PMD_HOME}" />
     </target>
 
@@ -344,7 +343,7 @@ using BUILD_NUMBER:   ${BuildNo}
         </path>
     </target>
 
-    <target name="pmd-check" depends="pmd-path2" unless="tiny-system-arch" >
+    <target name="pmd-check" depends="pmd-path2" >
         <available classname="net.sourceforge.pmd.ant.PMDTask" property="pmd.isavailable" classpathref="pmd.path"/>
 
         <fail unless="pmd.isavailable" >
@@ -359,12 +358,12 @@ using BUILD_NUMBER:   ${BuildNo}
         <echo level="verbose">pmd is using classpath: ${_pmd.cp}</echo>
     </target>
 
-    <target name="pmd-taskdef" depends="init, pmd-check" unless="tiny-system-arch" >
+    <target name="pmd-taskdef" depends="init, pmd-check" >
         <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.path"/>
     </target>
 
 
-    <target name="pmd" depends="init, pmd-taskdef" unless="tiny-system-arch" >
+    <target name="pmd" depends="init,pmd-taskdef" >
         <echo message="this might take some time..." />
         <pmd rulesetfiles="${basedir}/etc/pmd-ruleset.xml" shortFilenames="true">
             <formatter type="summaryhtml" toFile="pmd_report.html"/>

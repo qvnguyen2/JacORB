@@ -14,21 +14,21 @@
        <property name="srcdir" value="${basedir}/${relative_src}"/>
    </target>
 
-   <target name="all" depends="init, local_init">
+   <target name="all" depends="init, local_init, tiny-system-check">
 	<javac srcdir="${srcdir}"
            destdir="${classdir}"
 	       includes="*.java"
 	        />
    </target>
 
-   <target name="rename" depends="init, local_init">
+   <target name="rename" depends="init, local_init, tiny-system-check">
         <replace dir="${srcdir}" token="XYZ" value="timerqueue">
                  <include name="*.java"/>
                  <include name="*.idl"/>
         </replace>
   </target>
 
-   <target name="clean" depends="init, local_init">
+   <target name="clean" depends="init, local_init, tiny-system-check">
 	   <delete dir="${classdir}/${relative_src}"/>
    </target>
 

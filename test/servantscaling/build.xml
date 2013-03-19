@@ -17,14 +17,14 @@
         <property name="dest" value="${dirs.base}/test/${name}/generated"/>
    </target>
 
-   <target name="all" depends="init,idl">
+   <target name="all" depends="init,tiny-system-check,idl">
 	<javac srcdir="${dirs.base}"
                destdir="${classdir}"
 	       includes="test/${name}/generated/**/*.java,test/${name}/*.java"
 	        />
    </target>
 
-   <target name="idl" depends="servantscaling.init,load-taskdef">
+   <target name="idl" depends="tiny-system-check,servantscaling.init,load-taskdef">
         <mkdir dir="${dest}" />
         <jacidl srcdir="test/${name}"
                 destdir="${dest}"
@@ -32,7 +32,7 @@
 	        includes="*.idl"/>
    </target>
 
-   <target name="clean" depends="init">
+   <target name="clean" depends="init,tiny-system-check">
            <delete dir="${classdir}/test/servantscaling"/>
            <delete dir="${dirs.base}/test/servantscaling/generated"/>
    </target>

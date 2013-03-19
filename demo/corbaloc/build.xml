@@ -4,9 +4,7 @@
 
     <import file="../common/common-demo.xml" />
 
-    <target name="demo" depends="demo-norm,demo-tiny" />
-
-    <target name="demo-norm" depends="compile" unless="tiny-system-arch" >
+    <target name="demo" depends="compile">
         <run-demo>
             <run-server>
                 <run-default-server classname="demo.corbaloc.Server" />
@@ -16,10 +14,6 @@
                 <run-default-client classname="demo.corbaloc.Client" />
             </run-client>
         </run-demo>
-    </target>
-
-    <target name="demo-tiny" if="tiny-system-arch" >
-        <run-demo-tiny server="demo.corbaloc.Server" client="demo.corbaloc.Client" />
     </target>
 
 </project>

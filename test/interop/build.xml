@@ -11,11 +11,11 @@
         </sequential>
     </macrodef>
 
-    <target name="compile" unless="tiny-system-arch" >
+    <target name="compile" >
         <iterate target="compile" />
     </target>
 
-    <target name="clean"  unless="tiny-system-arch">
+    <target name="clean" >
         <iterate target="clean" />
     </target>
 

@@ -14,7 +14,7 @@
        <property name="srcdir" value="${basedir}/${relative_src}"/>
    </target>
 
-   <target name="all" depends="init, local_init, idl">
+   <target name="all" depends="init, local_init, tiny-system-check,idl">
 	<javac srcdir="${srcdir}/generated"
            destdir="${classdir}"
 	       includes="${relative_src}/**/*.java"
@@ -25,7 +25,7 @@
 	        />
    </target>
 
-   <target name="idl" depends="init, local_init, load-taskdef">
+   <target name="idl" depends="init, local_init, tiny-system-check, load-taskdef">
       <mkdir dir="${srcdir}/generated" />
 
       <jacidl generateir="true"
@@ -35,14 +35,14 @@
               includes="server.idl"/>
    </target>
 
-   <target name="rename" depends="init, local_init">
+   <target name="rename" depends="init, local_init, tiny-system-check">
         <replace dir="${srcdir}" token="XYZ" value="${name}">
                  <include name="*.java"/>
                  <include name="*.idl"/>
         </replace>
   </target>
 
-   <target name="clean" depends="init, local_init">
+   <target name="clean" depends="init, local_init, tiny-system-check">
 	   <delete dir="${classdir}/${relative_src}"/>
 	   <delete dir="${srcdir}/generated"/>
    </target>

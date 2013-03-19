@@ -4,9 +4,7 @@
 
     <import file="../common/common-demo.xml" />
 
-    <target name="demo" depends="demo-norm,demo-tiny" />
-
-    <target name="demo-norm" depends="compile" unless="tiny-system-arch" >
+    <target name="demo" depends="compile">
         <run-demo>
             <run-server>
                 <run-default-server classname="demo.bidir.ServerImpl" />
@@ -16,9 +14,5 @@
                 <run-default-client classname="demo.bidir.Client" />
             </run-client>
         </run-demo>
-    </target>
-
-    <target name="demo-tiny" if="tiny-system-arch" >
-        <run-demo-tiny server="demo.bidir.ServerImpl" client="demo.bidir.Client" />
     </target>
 </project>

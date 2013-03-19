@@ -70,17 +70,23 @@
         </java>
     </presetdef>
 
-    <target name="idl.taskdef" unless="tiny-system-arch" >
+    <target name="tiny-system-check"  >
+      <fail message="On ${os.name}/${os.arch} system, you may launch the demo by typing: $JACORB_HOME/demo/launch_demo.sh.  Please note that some demos cannot be launched on such system.">
+         if="tiny-system-arch" >
+      </fail>
+   </target>
+
+    <target name="idl.taskdef"  >
         <taskdef name="jacidl" classname="org.jacorb.idl.JacIDL" classpathref="jacorb.classpath"/>
     </target>
 
-    <target name="idl" depends="idl.taskdef" unless="tiny-system-arch" >
+    <target name="idl" depends="tiny-system-check,idl.taskdef"  >
         <mkdir dir="${idl.dir}"/>
         <jacidl srcdir="${idl.dir}" destdir="${gen.dir}" includes="*.idl" helpercompat="jacorb"
     	   includepath="${jacorb.dir}/idl/omg" />
     </target>
 
-    <target name="compile" depends="idl" unless="tiny-system-arch" >
+    <target name="compile" depends="tiny-system-check,idl"  >
         <mkdir dir="${classes.dir}"/>
 
         <javac destdir="${classes.dir}" debug="true" includeantruntime="false">
@@ -139,22 +145,7 @@
         </sequential>
     </macrodef>
 
-    <macrodef name="run-demo-tiny" >
-		<attribute name="server" />
-		<attribute name="client" />
-		<sequential>
-			<echo message="launching demo @{server} @{client} ..." />
-
-			<exec executable="/bin/bash" newenvironment="false" dir="." failonerror="true">
-				<arg value="${jacorb.dir}/bin/launch_demo.sh" />
-				<arg value="@{server}" />
-				<arg value="@{client}" />
-			</exec>
-		</sequential>
-	</macrodef>
-
-
-    <target name="clean">
+    <target name="clean" unless="tiny-system-arch">
          <delete dir="${build.dir}"/>
     </target>
 </project>

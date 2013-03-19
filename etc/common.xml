@@ -65,6 +65,12 @@
         </condition>
    </target>
 
+   <target name="tiny-system-check"  >
+      <fail message="Task is not allowed on ${os.name}/${os.arch} system"
+            if="tiny-system-arch" >
+      </fail>
+   </target>
+
     <target name="init-path">
         <path id="path.base" >
             <pathelement location="${basedir}/classes"/>

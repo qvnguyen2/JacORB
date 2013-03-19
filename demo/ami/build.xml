@@ -4,13 +4,11 @@
 
     <import file="../common/common-demo.xml" />
 
-    <target name="demo" depends="demo-norm,demo-tiny" />
-
-    <target name="idl" depends="idl.taskdef" unless="tiny-system-arch" >
+    <target name="idl" depends="idl.taskdef">
         <jacidl srcdir="${idl.dir}" destdir="${gen.dir}" includes="*.idl" ami_callback="true" />
     </target>
 
-    <target name="demo-norm" depends="compile" unless="tiny-system-arch" >
+    <target name="demo" depends="compile" >
         <run-demo>
             <run-server>
                 <run-default-server classname="demo.ami.Server" />
@@ -20,9 +18,5 @@
                 <run-default-client classname="demo.ami.Client" />
             </run-client>
         </run-demo>
-    </target>
-
-    <target name="demo-tiny" if="tiny-system-arch" >
-        <run-demo-tiny server="demo.ami.Server" client="demo.ami.Client" />
     </target>
 </project>

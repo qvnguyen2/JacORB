@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<project name="DDS-demo" default="demo" basedir=".">
-
+<project name="DDS-demo" default="compile" basedir=".">
+  
   <property name="jacorb.dir" value="../../.."/>
-
+  
   <import file="../../common/common-demo.xml" />
-
-  <target name="demo" depends="demo-norm,demo-tiny" />
-
-  <target name="demo-norm" depends="compile,foo"  unless="tiny-system-arch"/>
-
-  <target name="demo-tiny" depends="foo"  if="tiny-system-arch"/>
-
+  
   <!-- ==================================================== -->
   <!--             DDS demo build file                      -->
   <!-- ==================================================== -->
-
+  
 
   <!--===========================================================-->
   <!--==========================    HELP    =====================-->
-  <!--===========================================================-->
+  <!--===========================================================-->	
   <target name="help">
     <echo message="use the following targets:"/>
     <echo message="- idl : to manage idl files and compile all files"/>
@@ -29,30 +23,30 @@
 
   <!--===========================================================-->
   <!--======================    Foo Example    ==================-->
-  <!--===========================================================-->
+  <!--===========================================================-->		
   <target name="foo" >
-    <parallel>
+    <parallel>	
       <exec executable="ns" vmlauncher="false">
-      </exec>
+      </exec>			
       <sequential>
         <sleep seconds="3" />
         <exec executable="jaco" vmlauncher="false" >
           <arg line="-cp ${build.dir}/classes demo.dds.dcps.Server" />
-        </exec>
-      </sequential>
+        </exec>	
+      </sequential> 			
       <sequential>
         <sleep seconds="6" />
         <parallel>
           <exec executable="jaco" vmlauncher="false" >
             <arg line="-cp ${build.dir}/classes demo.dds.dcps.foosample.FooProducer" />
           </exec>
-
+          
           <exec executable="jaco" vmlauncher="false" >
             <arg line="-cp ${build.dir}/classes demo.dds.dcps.foosample.FooConsumer" />
           </exec>
-        </parallel>
+        </parallel>	
       </sequential>
-    </parallel>
+    </parallel>		 
   </target>
-
+  
 </project>

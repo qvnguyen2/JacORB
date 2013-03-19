@@ -22,9 +22,46 @@
         <pathelement location="${resources.dir}" />
     </path>
 
+    <!-- properties for LynxOS and PPC card -->
+    <condition property="os-name-lynx">
+		<equals arg1="${os.name}"
+			arg2="LynxOS"
+			casesensitive="false"
+			trim="true"
+		/>
+	</condition>
+	<condition property="tiny-lynx-arch">
+        <and>
+            <istrue value="${os-name-lynx}" />
+            <equals arg1="${os.arch}"
+                    arg2="ppc"
+                    casesensitive="false"
+                    trim="true"
+            />
+        </and>
+    </condition>
+
+        <!-- This property is used collectively to identify a tiny system -->
+        <!-- architectures.  It is used to minimize ant's actions so that  -->
+        <!-- tests and some demos can be executed on a tiny system with very   -->
+        <!-- little memory.  Quynh N. -->
+    <condition property="tiny-system-arch">
+        <or>
+            <istrue value="${tiny-lynx-arch}" />
+            <!-- remove entry below if another property is added -->
+            <istrue value="${tiny-lynx-arch}" />
+        </or>
+    </condition>
+
     <taskdef name="jacorbidl" classname="org.jacorb.idl.JacIDL" classpathref="jacorb.classpath" />
 
-    <target name="idl" unless="tiny-system-arch">
+    <target name="tiny-system-check"  >
+      <fail message="Task is not allowed on ${os.name}/${os.arch} system."
+         if="tiny-system-arch" >
+      </fail>
+    </target>
+
+    <target name="idl" >
         <jacorbidl srcdir="${idl.dir}"
                    destdir="${gen.dir}"
                    includes="*.idl"
@@ -32,7 +69,7 @@
                    includepath="${jacorb.dir}/idl/omg" />
     </target>
 
-    <target name="compile" depends="idl" unless="tiny-system-arch">
+    <target name="compile" depends="tiny-system-check,idl" >
         <mkdir dir="${classes.dir}" />
 
         <javac destdir="${classes.dir}" debug="true" includeAntRuntime="false">
@@ -42,7 +79,7 @@
         </javac>
     </target>
 
-    <target name="clean"  unless="tiny-system-arch">
+    <target name="clean" >
         <delete dir="${build.dir}" />
     </target>
 
