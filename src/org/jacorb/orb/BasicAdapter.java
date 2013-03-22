@@ -101,7 +101,6 @@ public class BasicAdapter
 
         if( logger.isDebugEnabled() )
         {
-             int n = 0;
              logger.debug("Found " + getListenerFactories().size() + " entries in ListenerFactories");
         }
         // create all Listeners
@@ -111,8 +110,7 @@ public class BasicAdapter
              Protocol p = Protocol.mapProfileTag(factories.profile_tag());
              if( logger.isDebugEnabled() )
              {
-                n++; m=0;
-                logger.debug("Factory " + n + " has " + transport_manager.getListenEndpoints(p).size() + " listen ep");
+                logger.debug("Factory has " + transport_manager.getListenEndpoints(p).size() + " listen ep");
              }
              Iterator<ListenEndpoint> it = transport_manager.getListenEndpoints(p).iterator();
 
@@ -121,8 +119,7 @@ public class BasicAdapter
                  ListenEndpoint listen_ep = it.next();
                  if( logger.isDebugEnabled() )
                  {
-                    m++;
-                    logger.debug("Factory/ep " + n + "/" + m + ": create listener for ep");
+                    logger.debug("Factory creates listener for ep");
                  }
                  Listener listener = factories.create_listener (null, (short)0, (short)0);
                  if (listener instanceof ListenerBase)

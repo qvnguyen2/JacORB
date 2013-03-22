@@ -967,6 +967,7 @@ public class IIOPListener
                         "listenerAddress=<" + listenerAddress.toString() + "> " +
                         "loopbackAddress=<" + loopbackAddress.toString() + ">");
             }
+        }
 
         public void start()
         {
