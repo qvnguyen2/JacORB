@@ -112,7 +112,7 @@ public class ListenEndpoint
      * @return address of type ProtocolAddressBase which describes the non-SSL
      * network SSL parameters of the endpoint.
      */
-    public ProtocolAddressBase getSSLAddress()
+    public final ProtocolAddressBase getSSLAddress()
     {
         return sslAddress;
     }
@@ -122,7 +122,7 @@ public class ListenEndpoint
      * @return protocolId of type Protocol which describes the protocol of the
      * endpoint.
      */
-    public Protocol getProtocol()
+    public final Protocol getProtocol()
     {
         return protocolId;
     }

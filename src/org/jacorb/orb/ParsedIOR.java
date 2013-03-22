@@ -402,7 +402,10 @@ public class ParsedIOR
                 throw new org.omg.CORBA.UNKNOWN("Error in building IIOP-IOR");
             }
         }
-
+        if( logger.isDebugEnabled() )
+        {
+                logger.debug("ParsedIOR got IOR of < " + ior_str + " >");
+        }
         return ior_str;
     }
 

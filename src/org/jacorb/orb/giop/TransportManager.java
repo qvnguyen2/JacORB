@@ -119,6 +119,7 @@ public class TransportManager
         if (factoryClassNames.isEmpty())
         {
            factoryClassNames.add("org.jacorb.orb.iiop.IIOPFactories");
+           logger.info("default transport factory 'org.jacorb.orb.iiop.IIOPFactories' will be used");
         }
 
         // pickup listen endpoints specified by arguments -ORBListenEndpoints

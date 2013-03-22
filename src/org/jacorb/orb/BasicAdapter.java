@@ -98,19 +98,36 @@ public class BasicAdapter
         request_listener.configure( configuration );
         reply_listener = new NoBiDirServerReplyListener();
 
+
+        if( logger.isDebugEnabled() )
+        {
+             int n = 0;
+             logger.debug("Found " + getListenerFactories().size() + " entries in ListenerFactories");
+        }
         // create all Listeners
         for (Iterator<Factories> i = getListenerFactories().iterator(); i.hasNext();)
         {
              Factories factories = i.next();
              Protocol p = Protocol.mapProfileTag(factories.profile_tag());
+             if( logger.isDebugEnabled() )
+             {
+                n++; m=0;
+                logger.debug("Factory " + n + " has " + transport_manager.getListenEndpoints(p).size() + " listen ep");
+             }
              Iterator<ListenEndpoint> it = transport_manager.getListenEndpoints(p).iterator();
 
              while (it.hasNext())
              {
+                 ListenEndpoint listen_ep = it.next();
+                 if( logger.isDebugEnabled() )
+                 {
+                    m++;
+                    logger.debug("Factory/ep " + n + "/" + m + ": create listener for ep");
+                 }
                  Listener listener = factories.create_listener (null, (short)0, (short)0);
                  if (listener instanceof ListenerBase)
                  {
-                     ((ListenerBase)listener).setListenEndpoint(it.next());
+                     ((ListenerBase)listener).setListenEndpoint(listen_ep);
                  }
                  if (listener instanceof Configurable)
                  {

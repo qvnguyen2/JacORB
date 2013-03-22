@@ -102,20 +102,34 @@ public class IIOPListener
         }
         if (listenEndpoint.getSSLAddress() != null)
         {
-            sslAddress = (IIOPAddress) listenEndpoint.getSSLAddress();
+            // get a copy of endpoint ssl address
+            sslAddress = (IIOPAddress) listenEndpoint.getSSLAddress().copy();
         }
         if (listenEndpoint.getAddress() != null)
         {
-            address = (IIOPAddress) listenEndpoint.getAddress();
+            // get a copy of endpoint address
+            address = (IIOPAddress) listenEndpoint.getAddress().copy();
         }
 
         if (address != null)
         {
+            if( logger.isDebugEnabled() )
+            {
+                logger.debug( "IIOPListener found ep address: " +
+                        "IP =<" + (address.getIP()==null? "null" : address.getIP()) + "> " +
+                        " port=<" + address.getPort() + ">");
+            }
             address.configure (configuration);
         }
 
         if (sslAddress != null)
         {
+            if( logger.isDebugEnabled() )
+            {
+                logger.debug( "IIOPListener found ep SSL address: " +
+                        "IP =<" + (sslAddress.getIP()==null? "null" : sslAddress.getIP()) + "> " +
+                        " port=<" + sslAddress.getPort() + ">");
+            }
             sslAddress.configure (configuration);
         }
 
@@ -142,12 +156,20 @@ public class IIOPListener
         if (!isSSLRequired() ||
             configuration.getAttributeAsBoolean("jacorb.security.ssl.always_open_unsecured_address", false))
         {
+            if( logger.isDebugEnabled() )
+            {
+                logger.debug( "IIOPListener creates Acceptor using ServerSocketListener");
+            }
             acceptor = new Acceptor("ServerSocketListener");
             ((Acceptor)acceptor).init();
         }
 
         if (supportSSL)
         {
+            if( logger.isDebugEnabled() )
+            {
+                logger.debug( "IIOPListener creates ssl Acceptor");
+            }
             sslAcceptor = new SSLAcceptor();
             sslAcceptor.init();
         }
@@ -156,6 +178,10 @@ public class IIOPListener
 
         if (configuration.getAttributeAsBoolean("jacorb.iiop.enable_loopback", true))
         {
+            if( logger.isDebugEnabled() )
+            {
+                logger.debug( "IIOPListener creates LoopbackAcceptor");
+            }
             loopbackAcceptor = new LoopbackAcceptor();
         }
 
@@ -245,12 +271,9 @@ public class IIOPListener
             {
                 address.setPort(serverAddress.getPort());
             }
-            else
+            if (logger.isDebugEnabled())
             {
-                if (logger.isDebugEnabled())
-                {
-                    logger.debug ("Using port " + address.getPort());
-                }
+                logger.debug ("IIOPListener creates profile using port " + address.getPort());
             }
 
             if (address.getHostInetAddress() == null)
@@ -420,6 +443,11 @@ public class IIOPListener
             }
 
             addressToUse = target;
+            if( logger.isDebugEnabled() )
+            {
+                logger.debug( "Acceptor addressToUse=<" + (addressToUse==null? "null" : addressToUse.toString() + ">"));
+            }
+
         }
 
         protected Acceptor(String name) throws ConfigurationException
@@ -651,7 +679,12 @@ public class IIOPListener
         {
             final InetAddress configuredHost = addressToUse.getConfiguredHost();
             final int port = addressToUse.getPort();
-
+            if( logger.isDebugEnabled() )
+            {
+                logger.debug( "Acceptor creates server socket using: " +
+                            "configuredHost=<" + (configuredHost==null? "null" : configuredHost.toString()) + "> " +
+                            " and port=<" + port + ">");
+            }
             return createServerSocket(configuredHost, port);
         }
 
@@ -700,8 +733,13 @@ public class IIOPListener
             }
             catch (IOException ex)
             {
-                logger.warn("could not create " + info + "ServerSocket port: " + port + " host: " + host, ex);
-                throw new org.omg.CORBA.INITIALIZE ("Could not create " + info + "ServerSocket (" + port + "): " + ex.toString());
+                logger.warn("Acceptor could not create server socket using: " +
+                            "host=<" + (host==null? "null" : host.toString()) + "> " +
+                            "and port=<" + port + ">", ex);
+
+                throw new org.omg.CORBA.INITIALIZE ("Acceptor could not create server socket using: " +
+                            "host=<" + (host==null? "null" : host.toString()) + "> " +
+                            "and port=<" + port + ">, " + ex.toString());
             }
         }
 
@@ -900,8 +938,22 @@ public class IIOPListener
             final IIOPProfile iiopProfile = (IIOPProfile)IIOPListener.this.profile;
             listenerAddress = (IIOPAddress)iiopProfile.getAddress().copy();
 
-            loopbackAddress = (IIOPAddress) listenerAddress.copy();
-            loopbackAddress.setHostname("127.0.0.1");
+            // create a fresh instance of loopbackAddress
+            loopbackAddress = new IIOPAddress ("127.0.0.1", ((IIOPAddress) iiopProfile.getAddress()).getPort());
+            try
+            {
+                loopbackAddress.configure(((org.jacorb.orb.ORB) IIOPListener.this.orb).getConfiguration());
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+
+            if( logger.isDebugEnabled() )
+            {
+                logger.debug("LoopbackAcceptor creates loopbackAddress using: "
+                        + "<" + loopbackAddress.toString() + ">");
+            }
             isSSL = iiopProfile.getSSL() != null;
 
             if (isSSL)
@@ -909,7 +961,12 @@ public class IIOPListener
                 listenerAddress.setPort(iiopProfile.getSSLPort());
                 loopbackAddress.setPort(iiopProfile.getSSLPort());
             }
-       }
+            if( logger.isDebugEnabled() )
+            {
+                logger.debug("LoopbackAcceptor got " +
+                        "listenerAddress=<" + listenerAddress.toString() + "> " +
+                        "loopbackAddress=<" + loopbackAddress.toString() + ">");
+            }
 
         public void start()
         {
