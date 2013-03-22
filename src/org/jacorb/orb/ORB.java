@@ -262,7 +262,7 @@ public final class ORB
      *
      * The ORB default initial reference argument, -ORBDefaultInitRef, assists in
      * resolution of initial references not explicitly specified with -ORBInitRef.
-     * -ORBDefaultInitRef requires a URL that, after appending a slash ‘/’ character and a
+     * -ORBDefaultInitRef requires a URL that, after appending a slash ‚Äò/‚Äô character and a
      * stringified object key, forms a new URL to identify an initial object reference.
      */
     private String defaultInitRef;
@@ -1776,11 +1776,46 @@ public final class ORB
     protected void set_parameters(String[] args, java.util.Properties props)
     {
         String id = "";
+        boolean isApplet = false;
 
+        // get ORBid from system props
+        try
+        {
+            String tmp_id = System.getProperty("ORBid");
+            if (tmp_id != null)
+            {
+                id = tmp_id;
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("got ORBid from System properties ORBid, id=<" + (id==null? "null" : id) + ">");
+                }
+            }
+        }
+        catch ( SecurityException e )
+        {
+            id = "";
+            isApplet = true;
+            if (logger.isWarnEnabled())
+            {
+                logger.warn("ORB could not access system property 'ORBid' - will use default...");
+            }
+        }
+
+        // ORBid from local props override system props
         if( props != null )
         {
-            id = (String)props.getProperty ("ORBid", "");
+            String tmp_id = (String)props.getProperty ("ORBid");
+            if (tmp_id != null)
+            {
+                id = tmp_id;
+                if (logger.isDebugEnabled())
+                {
+                    logger.debug("got ORBid from local props, id=<" + (id==null? "null" : id) + ">");
+                }
+            }
         }
+
+        // ORBid from cmd args override all props
         if ( args != null )
         {
             for ( int i = 0; i < args.length; i++ )
@@ -1791,15 +1826,24 @@ public final class ORB
                 {
                     if ( i+1 < args.length)
                     {
-                        // save orb_id before doing anything
-                        // orb_id should have already been set to default_orb_id by the constructor,
-                        // so if it will be updated only if an alternative id is provided.
-                        id = args[++i].trim();
+                        String tmp_id = args[++i].trim();
+                        if (tmp_id != null)
+                        {
+                            id = tmp_id;
+                            if (logger.isDebugEnabled())
+                            {
+                                logger.debug("got ORBid from from cmd args, id=<" + (id==null? "null" : id) + ">");
+                            }
+                        }
+                        else
+                        {
+                            throw new INITIALIZE ("Invalid -ORBID argument to ORB.init");
+                        }
                         break;
                     }
                     else
                     {
-                        throw new INITIALIZE ("Invalid number of arguments to ORB.init");
+                        throw new INITIALIZE ("Invalid -ORBID arguments to ORB.init");
                     }
                 }
             }
@@ -1810,7 +1854,7 @@ public final class ORB
             configure( org.jacorb.config.JacORBConfiguration.getConfiguration(props,
                                                                               this,
                                                                               id,
-                                                                              false)); // no applet support
+                                                                              isApplet)); // no applet support
         }
         catch ( ConfigurationException e )
         {
@@ -1821,6 +1865,11 @@ public final class ORB
         }
 
         orb_id = id;
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("ORBid (orb_id) is set to <" + (orb_id==null? "null" : orb_id) + ">");
+        }
+
         arguments = args;
 
         Configuration orbsingletonConfig = ((ORBSingleton)org.omg.CORBA.ORBSingleton.init ()).configuration;
@@ -1958,10 +2007,14 @@ public final class ORB
                                   java.util.Properties props)
     {
         String id = "";
-        
+
         if( props != null )
         {
-            id = (String)props.getProperty("ORBid", "");
+            String tmp_id = (String)props.getProperty("ORBid");
+            if (tmp_id == null)
+            {
+                id = tmp_id;
+            }
         }
         try
         {
@@ -1978,6 +2031,11 @@ public final class ORB
         }
 
         orb_id = id;
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Applet ORBid (orb_id) is set to <" + (orb_id==null? "null" : orb_id) + ">");
+        }
 
         internalInit();
     }

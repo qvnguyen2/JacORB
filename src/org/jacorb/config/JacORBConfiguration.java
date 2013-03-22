@@ -174,19 +174,6 @@ public class JacORBConfiguration implements Configuration
         String orbID = Version.orbId; // default id
         String myOrbID = null;
 
-        if ( !isApplet )
-        {
-            try
-            {
-                myOrbID = System.getProperty("ORBid");
-            }
-            catch ( SecurityException e )
-            {
-                isApplet = true;
-                System.err.println ("Could not access system property 'ORBid' - will use default...");
-            }
-        }
-
         // ORB args override system props.
         if ( orbid != null && orbid.length () > 0)
         {
