@@ -123,9 +123,8 @@
     </target>
 
     <target name="compile-test-listenendpoints">
-        <!-- jacorb-javac javac-src="${dir.test}/../listenendpoints/echo_corbaloc/src"
-                      javac-includes="org/jacorb/test/listenendpoints/**/*.java"/-->
-        <ant antfile="${basedir}/test/listenendpoints/echo_corbaloc/build.xml" target="all" inheritall="false" useNativeBasedir="true"/>
+        <jacorb-javac javac-src="${dir.test}/../listenendpoints/echo_corbaloc/src"
+                      javac-includes="org/jacorb/test/listenendpoints/**/*.java"/>
     </target>
 
     <!-- run the tests -->
