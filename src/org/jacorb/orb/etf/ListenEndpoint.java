@@ -1,6 +1,7 @@
 package org.jacorb.orb.etf;
 
 import org.omg.IOP.TAG_UIPMC;
+import org.jacorb.orb.etf.ProtocolAddressBase;
 
 /*
  *        JacORB - a free Java ORB
@@ -98,23 +99,31 @@ public class ListenEndpoint
     }
 
     /**
-     * Return the non-SSL address of the endpoint
+     * Return a copy of the non-SSL address of the endpoint
      * @return address of type ProtocolAddressBase which describes the non-SSL
      * network parameters of the endpoint.
      */
     public ProtocolAddressBase getAddress()
     {
-        return address;
+        if (address != null)
+        {
+            return address.copy();
+        }
+        return null;
     }
 
     /**
-     * Return the SSL address of the endpoint
+     * Return a copy of the SSL address of the endpoint
      * @return address of type ProtocolAddressBase which describes the non-SSL
      * network SSL parameters of the endpoint.
      */
-    public final ProtocolAddressBase getSSLAddress()
+    public ProtocolAddressBase getSSLAddress()
     {
-        return sslAddress;
+        if (sslAddress != null)
+        {
+            return sslAddress.copy();
+        }
+        return null;
     }
 
     /**

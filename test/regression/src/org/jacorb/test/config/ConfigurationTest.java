@@ -103,6 +103,13 @@ public class ConfigurationTest extends JacORBTestCase
             props.put("org.omg.CORBA.ORBSingletonClass",
                     "org.jacorb.orb.ORBSingleton");
 
+            // uncomment the following lines for debugging purposes
+            // props.put("jacorb.log.default.verbosity", "4");
+            // props.put("jacorb.debug.dump_outgoing_messages", "on");
+            // props.put("jacorb.debug.dump_incoming_messages", "on");
+            //  props.put("jacorb.log.showThread", "on");
+            // props.put("jacorb.log.showSrcInfo", "on");
+
             ORB orb = ORB.init(new String[] {}, props);
 
             int timeout = ((org.jacorb.orb.ORB) orb).getConfiguration()

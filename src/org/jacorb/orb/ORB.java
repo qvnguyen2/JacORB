@@ -1785,20 +1785,14 @@ public final class ORB
             if (tmp_id != null)
             {
                 id = tmp_id;
-                if (logger.isDebugEnabled())
-                {
-                    logger.debug("got ORBid from System properties ORBid, id=<" + (id==null? "null" : id) + ">");
-                }
+                logMsg("got ORBid from System properties ORBid, id=<" + (id==null? "null" : id) + ">");
             }
         }
         catch ( SecurityException e )
         {
             id = "";
             isApplet = true;
-            if (logger.isWarnEnabled())
-            {
-                logger.warn("ORB could not access system property 'ORBid' - will use default...");
-            }
+            logMsg("ORB could not access system property 'ORBid' - will use default...");
         }
 
         // ORBid from local props override system props
@@ -1808,10 +1802,7 @@ public final class ORB
             if (tmp_id != null)
             {
                 id = tmp_id;
-                if (logger.isDebugEnabled())
-                {
-                    logger.debug("got ORBid from local props, id=<" + (id==null? "null" : id) + ">");
-                }
+                logMsg("got ORBid from local props, id=<" + (id==null? "null" : id) + ">");
             }
         }
 
@@ -1830,10 +1821,7 @@ public final class ORB
                         if (tmp_id != null)
                         {
                             id = tmp_id;
-                            if (logger.isDebugEnabled())
-                            {
-                                logger.debug("got ORBid from from cmd args, id=<" + (id==null? "null" : id) + ">");
-                            }
+                            logMsg("got ORBid from from cmd args, id=<" + (id==null? "null" : id) + ">");
                         }
                         else
                         {
@@ -3107,5 +3095,21 @@ public final class ORB
     public int getGIOPMinorVersion()
     {
         return giopMinorVersion;
+    }
+
+    private void logMsg(String s)
+    {
+        if (logger != null)
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug(s);
+            }
+        }
+        else
+        {
+            System.out.println("ORB " + s);
+            System.out.flush();
+        }
     }
 }

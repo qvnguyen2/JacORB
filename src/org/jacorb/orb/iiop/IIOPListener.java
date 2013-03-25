@@ -100,16 +100,10 @@ public class IIOPListener
             throw new org.omg.CORBA.INITIALIZE
                 ("listenEndpoint may not be null");
         }
-        if (listenEndpoint.getSSLAddress() != null)
-        {
-            // get a copy of endpoint ssl address
-            sslAddress = (IIOPAddress) listenEndpoint.getSSLAddress().copy();
-        }
-        if (listenEndpoint.getAddress() != null)
-        {
-            // get a copy of endpoint address
-            address = (IIOPAddress) listenEndpoint.getAddress().copy();
-        }
+        // get a copy of endpoint ssl address
+        sslAddress = (IIOPAddress) listenEndpoint.getSSLAddress();
+        // get a copy of endpoint address
+        address = (IIOPAddress) listenEndpoint.getAddress();
 
         if (address != null)
         {
