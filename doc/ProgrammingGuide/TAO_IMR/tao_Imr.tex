@@ -57,7 +57,7 @@ since servers consume system resources even in their idle states.
 
 The TAO ImR requires that an IOR it works with live beyond the server
 that created the IOR. Therefore, the IOR must be created using a POA with
-the {\tt PERSISTENT} life span policy. If a JacORB server’s ORB was
+the {\tt PERSISTENT} life span policy. If a JacORB server‚Äôs ORB was
 initialized by setting the property{\tt  jacorb.use\_tao\_imr} to on, then the
 persistent POA registers itself, upon creation, with the ImR.  If a JacORB
 server has more than one persistent POA, each is registered as a separate
@@ -155,8 +155,8 @@ steps:
 \end{enumerate}
 In the following subsequent sections, we will exam each step in the above
 process.  For illustration, we will use the ImR integration test package
-{\tt test.orbreinvoke.tao\_imr} whose source files and test scripts are kept
-in the directory{\tt \$JACORB\_HOME/test/orbreinvoke/tao\_imr}.
+{\tt org.jacorb.test.orbreinvoke.tao\_imr} whose source files and test
+scripts are kept in the directory{\tt \$JACORB\_HOME/test/orbreinvoke/tao\_imr}.
 
 \subsection{Environment Variables}
 
@@ -219,9 +219,9 @@ then the ImR Activator is the next process that must started on
 “myhost.ociweb.com” by running:
 
 \begin{verbatim}
-        export ImplRepoServiceIOR=///tmp/tao_imr_locator.ior
-        $TAO\_ROOT/orbsvcs/ImplRepo_Service/tao_imr_activator \
-                -d 2 -n <myhost.ociweb.com> -o /tmp/tao_imr_activator.ior
+        export ImplRepoServiceIOR=///tmp/tao\_imr\_locator.ior
+        $TAO\_ROOT/orbsvcs/ImplRepo_Service/tao\_imr\_activator \
+                -d 2 -n <myhost.ociweb.com> -o /tmp/tao\_imr\_activator.ior
 \end{verbatim}
 
 For illustration, you can run the script:
@@ -248,7 +248,7 @@ Once the Locator and the Activator are running, the JacORB server on
 {\tt add} command of the ImR Utility {\tt tao\_imr} as following:
 
 \begin{verbatim}
-        export ImplRepoServiceIOR=///tmp/tao_imr_locator.ior
+        export ImplRepoServiceIOR=///tmp/tao\_imr\_locator.ior
         $TAO\_ROOT/orbsvcs/ImplRepo\_Service/tao\_imr \
                {\tt add JACORB:<implname>/<qualified POA name>} \
                 < . . . other arguments . . .>
@@ -263,22 +263,22 @@ which essentially invokes the {\tt tao\_imr} utility to add an entry to
 the ImR repository as follows:
 
 \begin{verbatim}
-        export ImplRepoServiceIOR=///tmp/tao_imr_locator.ior
-        $TAO_ROOT/orbsvcs/ImplRepo_Service/tao_imr \
+        export ImplRepoServiceIOR=///tmp/tao\_imr\_locator.ior
+        $TAO_ROOT/orbsvcs/ImplRepo_Service/tao\_imr \
                add JACORB:EchoServer1/EchoServer-POA \
                 -a NORMAL \
-                -e ImplRepoServiceIOR=file:///tmp/tao_imr_locator.ior \
+                -e ImplRepoServiceIOR=file:///tmp/tao\_imr\_locator.ior \
                 -e JACORB_HOME=${JACORB_HOME} \
                 -e ACE_ROOT=${ACE_ROOT} \
                 -e TAO_ROOT=${TAO_ROOT} \
                 -e LD_LIBRARY_PATH=${ACE_ROOT}/lib \
                 -e LD_LIBRARY_PATH=${ACE_ROOT}/lib \
                 -e PATH=${JACORB_HOME}/bin:${ACE_ROOT}/bin:${TAO_ROOT}/bin:${PATH} \
-                -w ${JACORB_HOME}/test/orbreinvoke/tao_imr \
+                -w ${JACORB_HOME}/test/orbreinvoke/tao\_imr \
                  -r 3 \
                  -l myhost.ociweb.com} \
                  -c <command line arguments to initiate the server process named
-                    {\tt test.orbreinvoke.tao_imr.SimpleServer}>
+                    {\tt org.jacorb.test.orbreinvoke.tao\_imr.SimpleServer}>
 \end{verbatim}
 
 where the argument are:
@@ -305,8 +305,8 @@ If successfully registered, you should see the response
 To review the entry in the ImR repository , you can run:
 
 \begin{verbatim}
-        export ImplRepoServiceIOR=///tmp/tao_imr_locator.ior
-        $TAO_ROOT/orbsvcs/ImplRepo_Service/tao_imr list -v
+        export ImplRepoServiceIOR=///tmp/tao\_imr\_locator.ior
+        $TAO_ROOT/orbsvcs/ImplRepo_Service/tao\_imr list -v
 \end{verbatim}
 
 or, you can run the script {\tt ./tao\_imr.sh list -v}, which essentially
@@ -438,7 +438,7 @@ Valid activation modes are:
 
 \subsection{Initiate the JacORB client}
 
-The server process {\tt test.orbreinvoke.tao\_imr.SimpleServer},  that is
+The server process {\tt org.jacorb.test.orbreinvoke.tao\_imr.SimpleServer},  that is
 associated with the registered server name
 {\tt “JACORB:EchoServer1/EchoServer-POA”} is simply an echoing server.
 Upon initiated, it will instantiate an {\tt EchoMessage} servant that is tied to
@@ -470,7 +470,7 @@ For illustration, you can run the script:
 
 \cmdline{./run\_SimpleClient.sh EchoServer1 [ImR hostname]}
 
-which will initiate the client process {\tt test.listenendpoints.echo\_corbaloc.Client}.
+which will initiate the client process {\tt org.jacorb.test.listenendpoints.echo\_corbaloc.Client}.
 The argument {\tt [ImR hostname} is required if you initiates the Locator on a
 remote host.  Upon initiated, the client process will use the described corbaloc
 IOR to locate the server through the ImR.  Sensing requests from the client,
@@ -483,7 +483,7 @@ the server in a loop using sequential messages and output the result to a log fi
 When finished, do the following to cleanup:
 
 \begin{itemize}
-    \item Find and kill {\tt test.listenendpoints.echo\_corbaloc.Client}
+    \item Find and kill {\tt org.jacorb.test.listenendpoints.echo\_corbaloc.Client}
     \item Shutdown the SimpleServer server using:
 
               \cmdline{./tao\_imr.sh shutdown "JACORB:EchoServer1/EchoServer-POA"}
@@ -546,7 +546,7 @@ information on each command via the -h option. For example:
 \cmdline{tao\_imr start -h}
 
 \begin{verbatim}
-   {\tt Usage: tao_imr [options] start <name> where [options] are ORB options
+   {\tt Usage: tao\_imr [options] start <name> where [options] are ORB options
 where <name> is the name of a registered POA. -h Displays this}
 \end{verbatim}
 
