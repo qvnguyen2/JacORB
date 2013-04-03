@@ -897,8 +897,23 @@ public class IIOPListener
             final IIOPProfile iiopProfile = (IIOPProfile)IIOPListener.this.profile;
             listenerAddress = (IIOPAddress)iiopProfile.getAddress().copy();
 
-            loopbackAddress = (IIOPAddress) listenerAddress.copy();
-            loopbackAddress.setHostname("127.0.0.1");
+            // create a fresh instance of loopbackAddress
+            loopbackAddress = new IIOPAddress ("127.0.0.1", ((IIOPAddress) iiopProfile.getAddress()).getPort());
+            try
+            {
+                loopbackAddress.configure(((org.jacorb.orb.ORB) IIOPListener.this.orb).getConfiguration());
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+
+            if( logger.isDebugEnabled() )
+            {
+                logger.debug("LoopbackAcceptor creates loopbackAddress using: "
+                        + "<" + loopbackAddress.toString() + ">");
+            }
+            
             isSSL = iiopProfile.getSSL() != null;
 
             if (isSSL)
