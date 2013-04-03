@@ -49,7 +49,7 @@ pid=$(ps -ax | grep -v grep | grep "Client.*${serverName}" | awk '{print $1}')
 corbaname="corbaname::localhost:55555,:phil.ociweb.com:55555#${serverName}.context"
 
 echo "$bn: starting ${client} with ${corbaloc} ..."
-client_name="test.orbreinvoke.tao_ns.Client"
+client_name="org.jacorb.test.orbreinvoke.tao_ns.Client"
 $JACORB_HOME/bin/jaco ${client_name} \
     -nscorbaname ${corbaname} \
 	-delay 5000 \

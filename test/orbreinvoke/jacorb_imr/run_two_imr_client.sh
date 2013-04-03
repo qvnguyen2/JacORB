@@ -43,7 +43,7 @@ fi
 log="${out_dir}/${client}_$$.log"
 rm -f ${log} 2>&1
 
-client_name="test.listenendpoints.echo_corbaloc.Client"
+client_name="org.jacorb.test.listenendpoints.echo_corbaloc.Client"
 pid=$(ps -ax | grep -v grep | grep "^.* ${client_name}.*corbaloc.*4444.*${serverName}" | awk '{print $1}')
 [[ ! -z $pid ]] && kill -s 15 $pid && wait 5
 

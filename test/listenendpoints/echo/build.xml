@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
 
-<project name="listenendpoints" default="all" basedir=".">
+<project name="listenendpoints-echo" default="all" basedir=".">
 
   <!-- ==================================================== -->
   <!--                   build file                         -->
   <!-- ==================================================== -->
 
 
-  <target name="init" >
+    <target name="init">
         <property name="jacorb.dir" value="../../.." />
-	<property name="build.dir" value="${basedir}/build"/>
-	<property name="classes.dir" value="${build.dir}/classes"/>
+        <property name="build.dir" value="${basedir}/generated"/>
+        <property name="classes.dir" value="${jacorb.dir}/classes"/>
+        <property name="src.dir" value="${basedir}/src"/>
 
         <path id="jacorb.classpath" >
             <pathelement location="${jacorb.dir}/classes" />
@@ -20,31 +21,32 @@
         </path>
 
         <taskdef name="jacidl" classname="org.jacorb.idl.JacIDL" classpathref="jacorb.classpath"/>
-   </target>
+    </target>
 
-   <target name="all" depends="init,idl">
+    <target name="all" depends="init,idl">
         <mkdir dir="${classes.dir}"/>
 
-	<javac destdir="${classes.dir}"
+        <javac destdir="${classes.dir}"
 	       debug="true"
                includeantruntime="false">
-            <src path="${basedir}/src"/>
-            <src path="${basedir}/build/generated"/>
+            <src path="${src.dir}"/>
+            <src path="${build.dir}"/>
             <classpath refid="jacorb.classpath"/>
         </javac>
-   </target>
+    </target>
 
-   <target name="idl" depends="init">
+    <target name="idl" depends="init">
        <jacidl generateir="true"
                srcdir="${basedir}/idl"
                includepath="${jacorb.dir}/idl/omg"
-               destdir="${basedir}/build/generated">
+               destdir="${build.dir}">
            <i2jpackage names=":org.jacorb"/>
        </jacidl>
-   </target>
+    </target>
 
-   <target name="clean" depends="init">
+    <target name="clean" depends="init">
          <delete dir="${build.dir}"/>
-   </target>
+         <delete dir="${classes.dir}/org/jcorb/test/listenendpoints/echo"/>
+    </target>
 
 </project>

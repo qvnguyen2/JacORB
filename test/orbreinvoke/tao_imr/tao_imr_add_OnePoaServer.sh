@@ -20,7 +20,7 @@ if [[ $implName == "EchoServer2" ]] ; then
     endpoint="iiop://${host}:32999"
 fi
 
-server_name="test.orbreinvoke.tao_imr.OnePoaServer"
+server_name="org.jacorb.test.orbreinvoke.tao_imr.OnePoaServer"
 tao_locator_ior="/tmp/tao_imr_locator.ior"
 iorfile="/tmp/${server_name}.${implName}.EchoServer.ior"
 APP=tao_imr

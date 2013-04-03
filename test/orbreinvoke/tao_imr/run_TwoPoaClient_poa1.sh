@@ -1,6 +1,6 @@
 #!/bin/bash
 bn=${0##*/}
-client_name="test.listenendpoints.echo_corbaloc.Client"
+client_name="org.jacorb.test.listenendpoints.echo_corbaloc.Client"
 host=$(hostname)
 serverName=$1
 imr_host=$2

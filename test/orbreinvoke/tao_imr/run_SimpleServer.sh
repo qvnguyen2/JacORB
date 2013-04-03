@@ -1,6 +1,6 @@
 #!/bin/bash
 bn=${0##*/}
-server_name="test.orbreinvoke.tao_imr.SimpleServer"
+server_name="org.jacorb.test.orbreinvoke.tao_imr.SimpleServer"
 host=$(hostname)
 if [[ $host == "phil" ]] ; then
     host="phil.ociweb.com"

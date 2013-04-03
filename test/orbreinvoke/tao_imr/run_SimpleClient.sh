@@ -55,7 +55,7 @@ else
 fi
 echo "$bn: corbaloc IOR is ${corbaloc}"
 echo "$bn: starting ${client} (${server_name}) ..."
-$JACORB_HOME/bin/jaco test.listenendpoints.echo_corbaloc.Client \
+$JACORB_HOME/bin/jaco org.jacorb.test.listenendpoints.echo_corbaloc.Client \
     -corbaloc ${corbaloc} \
     -delay 5000 \
     -loop \

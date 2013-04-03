@@ -52,7 +52,7 @@ fi
 
 echo "$bn: IOR file is ${iorfile}"
 echo "$bn: starting ${client} (${server_name}) ..."
-$JACORB_HOME/bin/jaco test.listenendpoints.echo_corbaloc.Client \
+$JACORB_HOME/bin/jaco org.jacorb.test.listenendpoints.echo_corbaloc.Client \
     -iorfile  ${iorfile} \
     -delay 5000 \
     -loop \

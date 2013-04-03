@@ -1,7 +1,7 @@
 #!/bin/bash
 bn=${0##*/}
 host=$(hostname)
-server_name="test.orbreinvoke.tao_ns.Server"
+server_name="org.jacorb.test.orbreinvoke.tao_ns.Server"
 implName=$1
 if [[ -z $implName ]] ; then
     echo "$bn: Usage: $bn <EchoServer1 or EchoServer2>"
