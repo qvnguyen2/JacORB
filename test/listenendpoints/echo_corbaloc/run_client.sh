@@ -11,12 +11,12 @@ export JACORB_HOME
 PATH=${PATH}
 CLASSPATH=${CLASSPATH}
 export PATH=${PATH}:${JACORB_HOME}/bin
-export CLASSPATH=${CLASSPATH}:`pwd`/build/classes
+export CLASSPATH=${CLASSPATH}:${JACORB_HOME}/classes
 echo "$bn: JACORB_HOME=<${JACORB_HOME}>"
 echo "$bn: CLASSPATH=<${CLASSPATH}>"
 echo "$bn: PATH=<${PATH}>"
 
-out_dir="${JACORB_HOME}/test/listenendpoints/echo_corbaloc/build/output"
+out_dir="${JACORB_HOME}/test/listenendpoints/echo_corbaloc/output"
 if [[ ! -d $out_dir ]] ; then
     mkdir -p $out_dir
 fi
