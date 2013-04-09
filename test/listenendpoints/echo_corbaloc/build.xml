@@ -8,8 +8,9 @@
 
     <target name="init">
         <property name="jacorb.dir" value="../../.." />
-        <property name="build.dir" value="${basedir}/generated"/>
-        <property name="classes.dir" value="${jacorb.dir}/classes"/>
+        <property name="build.dir" value="${basedir}/build"/>
+        <property name="generated.dir" value="${build.dir}/generated"/>
+        <property name="classes.dir" value="${build.dir}/classes"/>
         <property name="src.dir" value="${basedir}/src"/>
 
 
@@ -24,13 +25,14 @@
    </target>
 
    <target name="all" depends="init,idl">
+        <mkdir dir="${generated.dir}"/>
         <mkdir dir="${classes.dir}"/>
 
         <javac destdir="${classes.dir}"
 	       debug="true"
                includeantruntime="false">
             <src path="${src.dir}"/>
-            <src path="${build.dir}"/>
+            <src path="${generated.dir}"/>
             <classpath refid="jacorb.classpath"/>
         </javac>
    </target>
@@ -39,14 +41,13 @@
        <jacidl generateir="true"
                srcdir="${basedir}/idl"
                includepath="${jacorb.dir}/idl/omg"
-               destdir="${build.dir}">
+               destdir="${generated.dir}">
            <i2jpackage names=":org.jacorb"/>
        </jacidl>
    </target>
 
-   <target name="clean" depends="init">
-         <delete dir="${build.dir}"/>
-         <delete dir="${classes.dir}/org/jcorb/test/listenendpoints/echo_corbaloc"/>
+   <target name="clean">
+         <delete dir="${basedir}/build"/>
    </target>
 
 </project>

@@ -11,8 +11,14 @@
 
     <target name="init">
         <property name="jacorb.dir" value="../../../"/>
-        <property name="build.dir" value="${basedir}/generated"/>
-        <property name="classes.dir" value="${jacorb.dir}/classes"/>
+        <property name="build.dir" value="${basedir}/build"/>
+        <property name="generated.dir" value="${build.dir}/generated"/>
+        <property name="classes.dir" value="${build.dir}/classes"/>
+        <property name="src.dir" value="${basedir}/src"/>
+
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${generated.dir}"/>
 
         <path id="jacorb.classpath" >
             <pathelement location="${jacorb.dir}/classes" />
@@ -21,37 +27,42 @@
             </fileset>
         </path>
 
+        <taskdef name="jacidl" classname="org.jacorb.idl.JacIDL" classpathref="jacorb.classpath"/>
    </target>
 
    <target name="all"
-           depends="init,compile-test-listenendpoints-echo_corbaloc,compile">
+           depends="init,idl,compile-test-listenendpoints-echo_corbaloc,compile">
    </target>
 
-   <target name="compile">
-        <mkdir dir="${classes.dir}"/>
-        <mkdir dir="${build.dir}"/>
-
+   <target name="compile"  depends="init">
         <javac destdir="${classes.dir}"
                debug="true" includeantruntime="false">
-            <src path="${basedir}/src"/>
-            <src path="${build.dir}"/>
+            <src path="${src.dir}"/>
+            <src path="${generated.dir}"/>
             <classpath refid="jacorb.classpath"/>
 	   </javac>
 
    </target>
 
-   <target name="clean"
-        depends="init,clean-test-listenendpoints-echo_corbaloc">
-       <delete dir="${classes.dir}//org/jcorb/test/orbreinvoke/jacorb_imr"/>
-       <delete dir="${build.dir}"/>
+   <target name="idl" depends="init">
+       <jacidl generateir="true"
+               srcdir="${jacorb.dir}/test/listenendpoints/echo_corbaloc/idl"
+               includepath="${jacorb.dir}/idl/omg"
+               destdir="${generated.dir}">
+           <i2jpackage names=":org.jacorb"/>
+       </jacidl>
    </target>
 
-   <target name="compile-test-listenendpoints-echo_corbaloc">
-        <ant antfile="${jacorb.dir}/test/listenendpoints/echo_corbaloc/build.xml" target="idl" inheritall="false"/>
-        <ant antfile="${jacorb.dir}/test/listenendpoints/echo_corbaloc/build.xml" target="all" inheritall="false"/>
+   <target name="compile-test-listenendpoints-echo_corbaloc"  depends="init">
+        <javac destdir="${classes.dir}"
+               debug="true" includeantruntime="false">
+            <src path="${jacorb.dir}/test/listenendpoints/echo_corbaloc/src"/>
+            <src path="${generated.dir}"/>
+            <classpath refid="jacorb.classpath"/>
+	   </javac>
     </target>
 
-    <target name="clean-test-listenendpoints-echo_corbaloc">
-        <ant antfile="${jacorb.dir}/test/listenendpoints/echo_corbaloc/build.xml" target="clean" inheritall="false"/>
-    </target>
+    <target name="clean">
+       <delete dir="${basedir}/build"/>
+   </target>
 </project>
