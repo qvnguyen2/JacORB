@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<project name="userexception-test" default="all" basedir=".">
+
+    <import file="../../etc/common.xml"/>
+
+  <!-- ==================================================== -->
+  <!--                   build file                         -->
+  <!-- ==================================================== -->
+
+
+    <target name="init">
+        <property name="jacorb.dir" value="../.."/>
+	<property name="build.dir" value="${basedir}/build"/>
+	<property name="classes.dir" value="${build.dir}/classes"/>
+
+        <path id="jacorb.classpath" >
+            <pathelement location="${jacorb.dir}/classes" />
+            <fileset dir="${jacorb.dir}/lib">
+                <include name="*.jar" />
+            </fileset>
+        </path>
+
+        <taskdef name="jacidl" classname="org.jacorb.idl.JacIDL" classpathref="jacorb.classpath"/>
+
+   </target>
+
+   <target name="all"
+           depends="init,compile">
+   </target>
+
+   <target name="compile" depends="idl">
+        <mkdir dir="${classes.dir}"/>
+
+        <javac destdir="${classes.dir}"
+               debug="true" includeantruntime="false">
+            <src path="${basedir}/src"/>
+            <src path="${build.dir}"/>
+            <classpath refid="jacorb.classpath"/>
+	   </javac>
+
+   </target>
+
+   <target name="idl" depends="init">
+       <jacidl generateir="true"
+               srcdir="${basedir}/idl"
+               includepath="${jacorb.dir}/idl/omg"
+               destdir="${build.dir}/generated">
+           <i2jpackage names=":org.jacorb"/>
+       </jacidl>
+   </target>
+
+   <target name="clean">
+       <delete dir="${build.dir}"/>
+   </target>
+
+</project>
